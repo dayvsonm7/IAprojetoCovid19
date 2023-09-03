@@ -1,0 +1,7 @@
+streamlit
+pandas
+ydata_profiling
+imblearn
+time
+numpy
+scikit-learn==1.2.2
