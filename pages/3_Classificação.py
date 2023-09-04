@@ -111,9 +111,7 @@ def transformacao(df):
 
 def validacao_cruzada_por_modelo (modelo, dfinicial, dfprocessado):
     df = {'dfinicial': dfinicial, 'dfprocessado':dfprocessado}
-
-    resultados_modelos = []
-
+    results_final = []
     for df_nome, dataframe in df.items():
         tempo_randomforest=[]
         divisao, rotulos = dataframe.drop('RESULTADO', axis=1), dataframe['RESULTADO']
@@ -124,18 +122,12 @@ def validacao_cruzada_por_modelo (modelo, dfinicial, dfprocessado):
             execucao = cross_validate(classifier, divisao, rotulos, cv=10, scoring=nome_metricas)
             t2=time()
             tempo_randomforest.append(t2-t1)
+            mean_results = {'Dataset': df_nome, 'Mean time': np.mean(tempo_randomforest)}
             for medida in nome_metricas:
                 resultados[medida].append(np.mean(execucao[f'test_{medida}']))
-            
-        
-        mean_results = {'Dataset': df_nome, 'Mean time': np.mean(tempo_randomforest)}
-        
-        
-        for medida, result in resultados.items():
-                mean_results[medida]=np.mean(result)
-        
-        resultados_modelos.append(mean_results)
-    return resultados_modelos
+                mean_results[medida] = np.mean(resultados[medida])
+        results_final.append(mean_results)
+    return results_final
 
 
 
